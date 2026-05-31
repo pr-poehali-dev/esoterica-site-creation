@@ -3,7 +3,6 @@ import { useCart } from '@/context/CartContext';
 import Icon from '@/components/ui/icon';
 import { categoryLabels } from '@/data/products';
 import { useYookassa, openPaymentPage } from '@/components/extensions/yookassa/useYookassa';
-import func2url from '../../../func2url.json';
 
 type Step = 'cart' | 'checkout';
 
@@ -13,13 +12,15 @@ interface CheckoutForm {
   phone: string;
 }
 
+const YOOKASSA_URL = 'https://functions.poehali.dev/df7c7a74-403b-4875-ada6-778c7299e250';
+
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeItem, updateQuantity, totalPrice, totalItems, clearCart } = useCart();
   const [step, setStep] = useState<Step>('cart');
   const [form, setForm] = useState<CheckoutForm>({ name: '', email: '', phone: '' });
   const [formError, setFormError] = useState('');
 
-  const apiUrl = (func2url as Record<string, string>)['yookassa-yookassa'] ?? '';
+  const apiUrl = YOOKASSA_URL;
   const returnUrl = `${window.location.origin}/order-success`;
 
   const { createPayment, isLoading } = useYookassa({
